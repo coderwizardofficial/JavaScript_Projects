@@ -1,0 +1,197 @@
+<!--Starting with the HTML wrapper code in the Code Editor...
+You may or may not use a <form>. Note that there is no backend process or program to submit a form to. 
+    If you use a form and submit, you must suppress the default action or the page will clear/load unpredictable
+    results.
+    Ask the user to input their first name, last name, a UserID, and a birthdate in type date format.  The UserID must
+    contain an uppercase, a lowercase, a number, and be 8 to 12 chars long.  
+    Create a JS function to verify formats of the UserID field.
+    You will need to use Loop For to iterate through your data fields character by character, and JS functions like
+    char.toUpperCase() and parsInt(char) or RegExp() to validate the UserID format.
+    Use the following variables (exact variable names) to hold the data:
+    uid is UserID.
+    fname is first name.
+    lname is last name.
+    birthday is birthday and type date
+    You have to write a function called “dateDiff” that accepts one date parameter and returns the number of days
+    between the birthday provided and the current date.
+    Create an “Accept” button to execute your functions and create the following output:
+    If the UserID does not pass your verification, then print “Invalid UserID”
+    If the fname, lname, or birthday fields are empty then print “Invalid fname” etc…
+    Print “fname lname you have been breathing for ### days!” where ### is the number returned by your dateDiff()
+    function.  Remember to convert milliseconds to days and only return the integer (whole) number of days.
+    If the number of days is less than (365*18) then print “You are probably not old enough to take this class!”
+    Use document.getElementById().innerHtml to display results and information messages.
+    Create a “Loop For” that loops 20 times and uses code similar to:
+    let str = "";str = str.padStart(i,”x”); // i is the loop counter
+    to print 20 lines of Xs from 1 to 20 Xs.  The first line should have a single X and the 20th line should have 20 Xs.
+    Your Xs should be printed on the Display page as depicted in the example below.
+    Make sure you understand and can explain a For Loop, padStart(i,"X"), innerHTML and what the DOM (Document Object
+    Model) is.
+    Your code output should show in the Display window.  This is the equivalent of the browser window and shows the
+    render of the DOM document.
+    The console window is to display error and log messages only.  It is for use in debugging your code. Output to the
+    log window will not be considered as satisfying project requirements. 
+    Your completed project display should look something like this at the top:
+-->
+
+    <!DOCTYPE html>
+    <html>
+    <html>
+
+    <head>
+        <title>My JavaScript</title>
+    </head>
+
+    <body>
+        <div>
+            <!-- <put your HTML code to input data here> -->
+            User Id: <input type="text" id="uid"><br>
+            First Name: <input type="text" id="fname"><br>
+            Last Name: <input type="text" id="lname"><br>
+            Birthday: <input type="date" id="birthday"> <br>
+            <button id="press_accept" onclick="verification()">Accept</button><br>
+        </div>
+
+        <!-- result div to display the result -->
+        <div id="result">
+
+        </div>
+
+        <script>
+
+            function verification() {
+
+                // get the result element
+                const result = document.getElementById('result');
+
+                // get the user id
+                const uid = document.getElementById("uid").value;
+
+                // if the length of user id is between 8 to 12
+                if (uid.length >= 8 && uid.length <= 12) {
+
+                    let upper = false;
+                    let lower = false;
+                    let number = false;
+
+                    // iterate over each letter of the user id
+                    for (let i = 0; i < uid.length; i++) {
+
+                        let char = uid[i];
+
+                        // if the letter is an uppercase letter
+                        if (char === char.toUpperCase()) {
+                            upper = true;
+                        }
+
+                        // if the letter is a lowercase letter
+                        if (char === char.toLowerCase()) {
+                            lower = true;
+                        }
+
+                        // if the letter is a number
+                        if (!isNaN(parseInt(char))) {
+                            number = true;
+                        }
+                    }
+
+                    // if user id is invalid
+                    if (!(upper && lower && number)) {
+                        result.innerHTML = 'Invalid UserID';
+                        return;
+                    }
+
+                }
+                else {
+                    result.innerHTML = 'Invalid UserID';
+                    return;
+                }
+
+                // get first name and check to validate
+                const fname = document.getElementById("fname").value;
+                if (fname === '') {
+                    result.innerHTML = 'Invalid fname';
+                    return;
+                }
+
+                // get last name and check to validate
+                const lname = document.getElementById("lname").value;
+                if (lname === '') {
+                    result.innerHTML = 'Invalid lname';
+                    return;
+                }
+
+                // get birthdate and check to validate
+                const birthday = document.getElementById("birthday").value;
+                if (birthday === '') {
+                    result.innerHTML = 'Invalid Birthday';
+                    return;
+                }
+
+                // find difference between two dates
+                const diff_days = dateDiff(birthday);
+
+                // if the diff_days is less than 18 years
+                if (diff_days <= 365 * 18) {
+                    result.innerHTML = 'You are probably not old enough to take this class!';
+                    return;
+                }
+                else {
+                    result.innerHTML = fname + ' ' + lname + ' you have been breathing for ' + diff_days + ' days!';
+                }
+
+                // and document.getElementById().innerHTML to display results
+                // write your JS functions here
+                // write your JS Loop For here to print the Xs
+                // use something like document.write(str.padStart(i,"x") + "<br>");
+
+                let result_string = "";
+
+                // iterate 20 times
+                for (let i = 0; i < 20; i++) {
+                    let str = "";
+                    str = str.padStart(i, "X") + "<br>";
+                    result_string += str;
+                }
+
+                // create the new p element and append the pattern in the result element
+                let pattern = document.createElement('p');
+                pattern.innerHTML = result_string;
+                result.appendChild(pattern);
+
+            }
+
+            // dateDiff function
+            function dateDiff(date) {
+
+                // create new date from the given date
+                date = new Date(date);
+
+                // create new date from the current date
+                const current_date = new Date();
+
+                // find out the difference in miliseconds
+                const diff_time = Math.abs(current_date - date);
+
+                // find out the difference in days
+                const diff_days = Math.floor(diff_time / (1000 * 60 * 60 * 24));
+
+/*
+Basically, 1000 is used here just for converting seconds to milliseconds.
+
+Number of seconds in a day = 24 * 60 * 60 = 86400 seconds.
+
+1 second = 1000 milliseconds.
+
+So after calculating the expression, the result is in milliseconds.
+
+days * 24 * 60 * 60 * 1000 = days * 86400000 ms */
+
+                return diff_days;
+            }
+
+        </script>
+
+    </body>
+
+    </html>
